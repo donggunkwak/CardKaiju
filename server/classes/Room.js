@@ -17,7 +17,7 @@ class Room{
         if(index<0){
             throw Error(`Can't find player ${JSON.stringify(player)}`);
         }
-        this.players.splice(index);
+        this.players.splice(index,1);
     }
     hasSpace(){
         return this.players.length<2;

@@ -14,10 +14,10 @@ class GameManager{
     removePlayer(uuid){
         const player = this.players[uuid];
         if(player.roomCode!=null){
-            const room = this.rooms[roomCode];
+            const room = this.rooms[player.roomCode];
             room.removePlayer(player);
             if(room.isEmpty()){
-                this.deleteRoom(roomCode);
+                this.deleteRoom(player.roomCode);
             }
         }
         delete this.players[uuid];
