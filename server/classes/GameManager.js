@@ -29,6 +29,7 @@ class GameManager{
         if(code.length!=CODELENGTH){
             throw Error("Code needs to be length of 6!");
         }
+        code = code.toUpperCase();
         return this.rooms[code] = new Room(code);
     }
     deleteRoom(code){
@@ -75,8 +76,8 @@ class GameManager{
         if(!Object.keys(this.players).includes(uuid))
             throw Error(`Player with uid ${uuid} not found!`);
 
-
-        const playerConnection = this.players[uuid].connection;
+        const player = this.players[uuid];
+        const playerConnection = player.connection;
         console.log(uuid,message.toString());
 
         message = JSON.parse(message.toString());
@@ -86,10 +87,10 @@ class GameManager{
             case 'joinRoom':
                 try{
                     var code = null;
-                    if(message.roomCode!=undefined)
-                        code = message.roomCode;
+                    if(message.roomCode!="")
+                        code = message.roomCode.toUpperCase();
                     this.joinRoom(uuid,code);
-                    playerConnection.send(JSON.stringify({ type: 'message', message: `Succesfully joined room ${this.players[uuid].roomCode}` }));
+                    playerConnection.send(JSON.stringify({ type: 'message', message: `Succesfully joined room ${player.roomCode}`, room:player.roomCode }));
                 }
                 catch(e){
                     console.log(e);
