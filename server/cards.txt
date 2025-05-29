@@ -1,0 +1,15 @@
+Default Card alpha | alpha | 5 | null
+Default Card alpha | alpha | 6 | null
+Default Card alpha | alpha | 7 | null
+Default Card alpha | alpha | 8 | null
+Default Card alpha | alpha | 9 | null
+Default Card beta | beta | 5 | null
+Default Card beta | beta | 6 | null
+Default Card beta | beta | 7 | null
+Default Card beta | beta | 8 | null
+Default Card beta | beta | 9 | null
+Default Card gamma | gamma | 5 | null
+Default Card gamma | gamma | 6 | null
+Default Card gamma | gamma | 7 | null
+Default Card gamma | gamma | 8 | null
+Default Card gamma | gamma | 9 | null

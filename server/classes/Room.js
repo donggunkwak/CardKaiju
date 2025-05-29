@@ -1,29 +1,39 @@
+const {GameState} = require('./GameState.js')
 class Room{
     constructor(id){
         this.id = id;
-        this.players = [];
-        this.gameState = null;//not implemented yet
+        this.p1 = null;
+        this.p2 = null;
+        this.gameState = new GameState();//not implemented yet
     }
     addPlayer(player){
-        if(this.players.length<2){
-            this.players.push(player);
+        if(this.p1==null){
+            this.p1 = player;
+        }
+        else if(this.p2==null){
+            this.p2 = player;
         }
         else{
             throw Error('Room full');
         }
     }
     removePlayer(player){
-        const index = this.players.indexOf(player);
-        if(index<0){
-            throw Error(`Can't find player ${JSON.stringify(player)}`);
+        if(this.p1==player){
+            this.p1=null;
         }
-        this.players.splice(index,1);
+        else if(this.p2==player){
+            this.p2=null;
+        }
+        else{
+            throw Error('Player not found!');
+        }
     }
+    
     hasSpace(){
-        return this.players.length<2;
+        return this.p1==null||this.p2==null;
     }
     isEmpty(){
-        return this.players.length==0;
+        return this.p1==null&&this.p2==null;
     }
 }
 
