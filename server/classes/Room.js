@@ -6,6 +6,10 @@ class Room{
         this.p2 = null;
         this.gameState = new GameState();//not implemented yet
     }
+    makeMove(playerNum, handIndex){//1-2, 1-5
+        
+    }
+
     addPlayer(player){
         if(this.p1==null){
             this.p1 = player;

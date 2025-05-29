@@ -46,15 +46,17 @@ class GameState{
 
         if(this.lastPlays[0]!=null&&this.lastPlays[1]!=null)//both players have made a choice for the card
         {
-            this.makeTurn();
-            return {status:"complete", ...this.getState()};
+            const winner = this.makeTurn();
+            return {status:"complete", winner:winner, ...this.getState()};
         }
         else
-            return {status:"waiting"};
+            return {status:"waiting", ...this.getState()};
 
     }
     makeTurn(){
-        this.turn+=1;
+        this.turn+=1;//increment turn
+
+        //draw a card from both
         if(this.decks[0].length()>0)
             this.hands[0].push(this.decks[0].pop());
         if(this.decks[1].length()>0)
@@ -64,21 +66,57 @@ class GameState{
         const type1 = this.lastPlays[0].type;
         const type2 = this.lastPlays[1].type;
         const value1 = this.lastPlays[0].value;
-        const value2 = this.lastPlays[1].value;        
-
-        if(type1=="alpha"&&type2=="beta"){
-            this.points[0][0]+=1;
-        }
-        else if(type1=="alpha"&&type2=="gamma"){
-            this.points[1][2]+=1;
-        }
-        else if(type1=="alpha"&&type2=="alpha"){
-            if(value1>value2)
-                this.points[0][0]+=1
-            else if(value2>value1)
-                this.points[1][0]+=1
-        }
+        const value2 = this.lastPlays[1].value;    
+        
+        return this.resolveRound(type1,value1, type2, value2);
     }
+    resolveRound(type1, value1, type2, value2) {
+        const typeIndex = { alpha: 0, beta: 1, gamma: 2 };
+
+        function beats(a, b) {
+            return (
+                (a === "alpha" && b === "beta") ||
+                (a === "beta" && b === "gamma") ||
+                (a === "gamma" && b === "alpha")
+            );
+        }
+
+        function resolveNeutral(typeNeutral, opponentType) {
+            return opponentType === "neutral" ? ["alpha", "beta", "gamma"][Math.floor(Math.random() * 3)] : opponentType;
+        }
+
+        // Handle neutral cards
+        if (type1 === "neutral") type1 = resolveNeutral(type1, type2);
+        if (type2 === "neutral") type2 = resolveNeutral(type2, type1);
+
+        // Same type: compare values
+        if (type1 === type2) {
+            if (value1 > value2) {
+                this.points[0][typeIndex[type1]] += 1;
+                return 1;
+            } else if (value2 > value1) {
+                this.points[1][typeIndex[type2]] += 1;
+                return 2;
+            } else {
+                return 0; // tie
+            }
+        }
+
+        // Type1 wins
+        if (beats(type1, type2)) {
+            this.points[0][typeIndex[type1]] += 1;
+            return 1;
+        }
+
+        // Type2 wins
+        if (beats(type2, type1)) {
+            this.points[1][typeIndex[type2]] += 1;
+            return 2;
+        }
+
+        return 0; // fallback for unexpected cases
+    }
+
 
     getState(){
         return {hand1:this.hands[0],
