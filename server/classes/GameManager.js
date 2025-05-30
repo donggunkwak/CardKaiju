@@ -14,11 +14,7 @@ class GameManager{
     removePlayer(uuid){
         const player = this.players[uuid];
         if(player.roomCode!=null){
-            const room = this.rooms[player.roomCode];
-            room.removePlayer(player);
-            if(room.isEmpty()){
-                this.deleteRoom(player.roomCode);
-            }
+            this.leaveRoom(uuid);
         }
         delete this.players[uuid];
     }
@@ -68,8 +64,13 @@ class GameManager{
         const room = this.rooms[roomCode];
         room.removePlayer(player);
         player.roomCode=null;
+        if(room.p1)
+            room.p1.send(JSON.stringify(room.getRoom(room.p1.uuid)))
+        if(room.p2)
+            room.p2.send(JSON.stringify(room.getRoom(room.p2.uuid)))
         if(room.isEmpty())
             this.deleteRoom(roomCode);
+        
     }
 
     handleMessage(uuid, message){
@@ -78,11 +79,10 @@ class GameManager{
 
         const player = this.players[uuid];
         const playerConnection = player.connection;
-        console.log(uuid,message.toString());
+        console.log(player.username, uuid,message.toString());
 
         message = JSON.parse(message.toString());
 
-        console.log(uuid,message, message.type);
         switch(message.type){
             case 'joinRoom':
                 try{
@@ -145,20 +145,6 @@ class GameManager{
         }
         throw Error("Could not generate a unique code for some reason, try again");
     }
-
-    // printRoomsAndPlayers(){
-        
-    //     Object.keys(this.rooms).forEach(code=>{
-    //         const room = this.rooms[code];
-    //         var curString = `Room:${code}: [`;
-    //         curString+= room.p1['username']+', '+room.p2['username']+']';
-    //     });
-    //     Object.keys(this.players).forEach(uuid=>{
-    //         const player = this.players[uuid];
-    //         console.log(`${player.username} - ${player.roomCode}`);
-    //     })
-    // }
-    
 
 }
 

@@ -7,17 +7,23 @@ class Room{
         this.gameState = new GameState();//not implemented yet
     }
     makeMove(playerID, handIndex){//1-2, 1-5
+        if(this.p1==null||this.p2==null)
+            throw Error("Cannot make move while room is not full!");
         const playerNum = this.getPlayerNum(playerID);
         let response = this.gameState.playerChooseCard(playerNum,handIndex);
-        if(response.status=="complete"){
-            // Send to p1 without hand2
-            const {hand2, ...responseForP1} = response;
-            this.p1.send(JSON.stringify(responseForP1));
-            
-            // Send to p2 without hand1
-            const {hand1, ...responseForP2} = response;
-            this.p2.send(JSON.stringify(responseForP2));
-        }
+
+
+        const p1 = this.p1==null?"":this.p1.username;
+        const p2 = this.p2==null?"":this.p2.username;
+        response.username1 = p1;
+        response.username2 = p2;
+        // Send to p1 without hand2
+        const {hand2, ...responseForP1} = response;
+        this.p1.send(JSON.stringify(responseForP1));
+        
+        // Send to p2 without hand1
+        const {hand1, ...responseForP2} = response;
+        this.p2.send(JSON.stringify(responseForP2));
     }
     getRoom(playerID){
         const p1 = this.p1==null?"":this.p1.username;
@@ -34,9 +40,9 @@ class Room{
         }
     }
     getPlayerNum(playerID){
-        if(this.p1.uuid==playerID)
+        if(this.p1&&this.p1.uuid==playerID)
             return 1;
-        if(this.p2.uuid==playerID)
+        if(this.p2&&this.p2.uuid==playerID)
             return 2;
         throw Error("That player is not in the game!");
     }

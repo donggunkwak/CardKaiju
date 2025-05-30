@@ -67,9 +67,9 @@ class GameState{
         this.turn+=1;//increment turn
 
         //draw a card from both
-        if(this.decks[0].length()>0)
+        if(this.decks[0].length>0)
             this.hands[0].push(this.decks[0].pop());
-        if(this.decks[1].length()>0)
+        if(this.decks[1].length>0)
             this.hands[1].push(this.decks[1].pop());
 
 
