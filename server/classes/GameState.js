@@ -11,11 +11,16 @@ function shuffle(array) {
 class GameState{
     constructor(){
         this.decks = [[],[]];//Cards
-        const lines = fs.readFileSync('card.txt', 'utf-8').split('\n').filter(Boolean);
+        const lines = fs.readFileSync('cards.txt', 'utf-8').split('\n').filter(Boolean);
         lines.forEach((line) => {
-            const {name, type, value, effect} = line.split("|");
-            this.decks[0].push(new Card(name.trim(),type.trim(),value.trim(),effect.trim()));
-            this.decks[1].push(new Card(name.trim(),type.trim(),value.trim(),effect.trim()));
+            const splitLine = line.split("|");
+            const name = splitLine[0].trim();
+            const type = splitLine[1].trim();
+            const value = parseInt(splitLine[2].trim());
+            const effect = splitLine[3].trim();
+
+            this.decks[0].push(new Card(name,type,value,effect));
+            this.decks[1].push(new Card(name,type,value,effect));
         });
         shuffle(this.decks[0]);
         shuffle(this.decks[1]);
@@ -30,8 +35,9 @@ class GameState{
         this.currentEffect = "";
         this.turn = 1;
         this.lastPlays = [null,null];
-        console.log(this.decks[0], this.hands[0]);
-        console.log(this.decks[1],this.hands[1]);
+        console.log(this.hands[0]);
+        console.log("=================");
+        console.log(this.hands[1]);
     }
     playerChooseCard(playerNum, handIndex){//1 or 2, 1-5
         if(playerNum<1||playerNum>2||handIndex<1||handIndex>5)

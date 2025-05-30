@@ -128,7 +128,7 @@ class GameManager{
                     playerConnection.send(JSON.stringify({ type: 'error', message: e.toString() }));
                 }
         }
-        this.printRoomsAndPlayers();
+        // this.printRoomsAndPlayers();
     }
 
     generate_unique_code(){
@@ -146,21 +146,18 @@ class GameManager{
         throw Error("Could not generate a unique code for some reason, try again");
     }
 
-    printRoomsAndPlayers(){
+    // printRoomsAndPlayers(){
         
-        Object.keys(this.rooms).forEach(code=>{
-            const room = this.rooms[code];
-            var curString = `Room:${code}: [`;
-            room['players'].forEach((player)=>{
-                curString+=player['username']+', ';
-            });
-            console.log(curString+"]");
-        });
-        Object.keys(this.players).forEach(uuid=>{
-            const player = this.players[uuid];
-            console.log(`${player.username} - ${player.roomCode}`);
-        })
-    }
+    //     Object.keys(this.rooms).forEach(code=>{
+    //         const room = this.rooms[code];
+    //         var curString = `Room:${code}: [`;
+    //         curString+= room.p1['username']+', '+room.p2['username']+']';
+    //     });
+    //     Object.keys(this.players).forEach(uuid=>{
+    //         const player = this.players[uuid];
+    //         console.log(`${player.username} - ${player.roomCode}`);
+    //     })
+    // }
     
 
 }

@@ -50,16 +50,17 @@ export default function Room({username, roomCode, connection}:RoomProps) {
         }
     }
 
-    const stateHTML = (<>
+    const stateHTML =()=>{ return (<>
         <h3>Turn {gamestate.turn}</h3>
         <p>Points for player 1: {gamestate.points[0][0]} {gamestate.points[0][1]} {gamestate.points[0][2]}</p>
         <p>Points for player 2: {gamestate.points[1][0]} {gamestate.points[1][1]} {gamestate.points[1][2]}</p>
         <p>Current Effect: {gamestate.currentEffect}</p>
-    </>);
+    </>);}
 
-    const handHTML = <>{gamestate.hand.map((item,index)=>(
-        <p key={index}>{item}</p>
-    ))}</>
+    const handHTML = ()=>{return <>{gamestate.hand.map((card:any,index)=>(
+        <p key={index}>{card.name} {card.type} {card.value} {card.specialEffect}</p>
+    ))}</>}
+    console.log(gamestate.hand);
 
 
     return (
@@ -67,8 +68,8 @@ export default function Room({username, roomCode, connection}:RoomProps) {
             <h1>
                 Welcome to room {roomCode}, {username} 
             </h1>
-            {stateHTML}
-            {handHTML}
+            {stateHTML()}
+            {handHTML()}
         </>
     );
 }
