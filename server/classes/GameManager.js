@@ -91,6 +91,13 @@ class GameManager{
                         code = message.roomCode.toUpperCase();
                     this.joinRoom(uuid,code);
                     playerConnection.send(JSON.stringify({ type: 'message', message: `Succesfully joined room ${player.roomCode}`, room:player.roomCode }));
+
+                    const room = this.rooms[player.roomCode];
+                    if(!room.hasSpace()){//in case room is filled, send the gamestate
+                        room.p1.send(JSON.stringify(room.getRoom(room.p1.uuid)));
+                        room.p2.send(JSON.stringify(room.getRoom(room.p2.uuid)));
+                    }
+                    
                 }
                 catch(e){
                     console.log(e);
@@ -107,6 +114,19 @@ class GameManager{
                     playerConnection.send(JSON.stringify({ type: 'error', message: e.toString() }));
                 }
                 break;
+            case 'makeMove':
+                try{
+                    const handIndex = message.handIndex;
+                    if(handIndex==undefined)
+                        throw Error("Need to have handIndex in message sent");
+                    const roomCode = player.roomCode;
+                    const room = this.rooms[roomCode];
+                    room.makeMove(uuid,handIndex);
+                }
+                catch(e){
+                    console.log(e);
+                    playerConnection.send(JSON.stringify({ type: 'error', message: e.toString() }));
+                }
         }
         this.printRoomsAndPlayers();
     }

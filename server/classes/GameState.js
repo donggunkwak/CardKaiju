@@ -30,8 +30,12 @@ class GameState{
         this.currentEffect = "";
         this.turn = 1;
         this.lastPlays = [null,null];
+        console.log(this.decks[0], this.hands[0]);
+        console.log(this.decks[1],this.hands[1]);
     }
     playerChooseCard(playerNum, handIndex){//1 or 2, 1-5
+        if(playerNum<1||playerNum>2||handIndex<1||handIndex>5)
+            throw Error("The values for playerNum or handIndex are out of bounds! (1-2) and (1-5)")
         playerNum-=1;
         handIndex-=1;
         
