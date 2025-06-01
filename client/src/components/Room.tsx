@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import useWebSocket from 'react-use-websocket';
 import { WebSocketHook } from 'react-use-websocket/dist/lib/types';
+import Game from './Game';
 
 type RoomProps = {
     username: string,
@@ -96,14 +97,15 @@ export default function Room({username, roomCode, connection}:RoomProps) {
         <button key={index} onClick={()=>makeMove(index+1)}>{card.name} {card.type} {card.value} {card.specialEffect}</button>
     ))}</>}
 
+    return <Game username1={username1} username2={username2} gamestate={gamestate}></Game>;
 
-    return (
-        <>
-            <h1>
-                Welcome to room {roomCode}, {username} 
-            </h1>
-            {stateHTML()}
-            {handHTML()}
-        </>
-    );
+    // return (
+    //     <>
+    //         <h1>
+    //             Welcome to room {roomCode}, {username} 
+    //         </h1>
+    //         {stateHTML()}
+    //         {handHTML()}
+    //     </>
+    // );
 }
