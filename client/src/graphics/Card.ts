@@ -12,6 +12,7 @@ export class Card{
     scale:number = 1;
     rotatedAngle: number;
     originalAngle:number;
+    clicked:boolean = false;
 
     private static images: { CardTemplate: HTMLImageElement | null,
         KingKJuul: HTMLImageElement | null,
@@ -142,10 +143,22 @@ export class Card{
         // ctx.strokeRect(x, y, maxWidth, maxHeight);
     }
 
+    onClick(){
+        this.clicked=true;
+    }
+    unClick(){
+        this.clicked=false;
+        this.x=this.originalX;
+        this.y=this.originalY;
+    }
 
-    onHover(){
-        if(this.scale==1){
-            this.scale=1.3;
+    onHover(x:number, y:number){
+        if(this.clicked){
+            this.x=x;
+            this.y=y;
+        }
+        else if(this.scale==1){
+            this.scale=1.2;
             this.y = window.innerHeight-(this.height*this.scale)/2
             this.rotatedAngle = 0;
         }
@@ -175,7 +188,7 @@ export class Card{
     }
     updateMouseOver(x:number, y:number){
         if(this.checkMouseIn(x,y)){
-            this.onHover();
+            this.onHover(x,y);
             return true;
         }
         else{

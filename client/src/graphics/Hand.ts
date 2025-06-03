@@ -38,6 +38,18 @@ export class Hand{
         }
             
     }
+    onClick(x:number, y:number){
+        this.updateMouseOver(x,y);
+        if(this.hovered==-1)
+            return;
+        console.log("hand clicked");
+        this.cards[this.hovered].onClick();
+    }
+    onRelease(){
+        for(const card of this.cards)
+            card.unClick();
+        this.hovered=-1;
+    }
     updateMouseOver(x:number, y:number){
         if(this.hovered!=-1){//only update one card if a card is already hovered.
             const hoveredStatus = this.cards[this.hovered].updateMouseOver(x,y);

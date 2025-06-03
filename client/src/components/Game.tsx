@@ -62,9 +62,14 @@ export default function Game({username1, username2, gamestate}: GameProps){
             const y = event.clientY;
             hand.updateMouseOver(x,y);
         });
-        window.addEventListener('click', ()=>{
-
+        window.addEventListener('mousedown', (event)=>{
+            const x = event.clientX;
+            const y = event.clientY;
+            hand.onClick(x,y);
         });
+        window.addEventListener('mouseup',()=>{
+            hand.onRelease();
+        })
 
     }, [gamestate]);
     return (
