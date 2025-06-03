@@ -1,6 +1,6 @@
 export class Card{
-    x:number;
-    y:number;
+    x:number;//center X
+    y:number;// center Y
     width:number;
     height:number;
     name:string;
@@ -8,6 +8,7 @@ export class Card{
     value:number;
     specialEffect:string;
     scale:number = 1;
+    rotatedAngle: number;
 
     private static images: { CardTemplate: HTMLImageElement | null,
         KingKJuul: HTMLImageElement | null,
@@ -17,7 +18,7 @@ export class Card{
     }
     private static loaded:boolean = false;
 
-    constructor(x:number, y:number,widthSize:number, name:string, type:string, value:number, specialEffect:string) {
+    constructor(x:number, y:number,widthSize:number, name:string, type:string, value:number, specialEffect:string, angle:number) {
         this.x = x;
         this.y = y;
         this.width=widthSize;
@@ -26,6 +27,7 @@ export class Card{
         this.type = type;
         this.value = value;
         this.specialEffect = specialEffect;
+        this.rotatedAngle = angle;
 
     }
     typeToText(){
@@ -58,16 +60,21 @@ export class Card{
         if(!Card.loaded){
             console.log("Images not loaded yet");
             return;
-        }
-            
+        }    
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.rotatedAngle*Math.PI/180);
+        
+
         const width = this.width*this.scale;
         const height = this.height * this.scale;
+        const drawingX = -width/2;
+        const drawingY = -height/2;
         if(Card.images.CardTemplate)
-            ctx.drawImage(Card.images.CardTemplate, this.x,this.y, width, height);
+            ctx.drawImage(Card.images.CardTemplate, drawingX,drawingY, width, height);
         //draw at around 1/8 from left of card, 5/64 from top, 4/9 of the width, and 7/64 (pixels) of the height
         //very poor code lol but just need to set dimensions and stuff
-        this.drawFittedText(ctx, this.name, this.x + (width * 4 / 32), this.y + (height * 5 / 64), width*4/9, height*(7/64), 'black');
-        this.drawFittedText(ctx, this.value.toString(), this.x + (width * 43 / 64), this.y + (height * 6 / 64), width*(4/32), height*(6/64),'black');
+        this.drawFittedText(ctx, this.name, drawingX + (width * 4 / 32), drawingY + (height * 5 / 64), width*4/9, height*(7/64), 'black');
+        this.drawFittedText(ctx, this.value.toString(), drawingX + (width * 43 / 64), drawingY + (height * 6 / 64), width*(4/32), height*(6/64),'black');
 
         let typeColor = 'black';
         if(this.type=='alpha')
@@ -78,18 +85,19 @@ export class Card{
             typeColor='yellow'
         else if(this.type=='neutral')
             typeColor='gray'
-        this.drawFittedText(ctx, this.typeToText(), this.x + (width * 51 / 64), this.y + (height * 5 / 64), width*(3/32), height*(7/64), typeColor);
+        this.drawFittedText(ctx, this.typeToText(), drawingX + (width * 51 / 64), drawingY + (height * 5 / 64), width*(3/32), height*(7/64), typeColor);
         
-        this.drawFittedText(ctx, this.specialEffect,  this.x + (width * 4 / 32), this.y + (height * 45 / 64), width*48/64, height*(12/64), 'black')
+        this.drawFittedText(ctx, this.specialEffect,  drawingX + (width * 4 / 32), drawingY + (height * 45 / 64), width*48/64, height*(12/64), 'black')
         
         
         const imageName = this.name.replaceAll(" ","").replaceAll(".","") as keyof typeof Card.images;
         if(Card.images[imageName]){
-            ctx.drawImage(Card.images[imageName], this.x+(width*7/64),this.y+(height*13/64), width*(50/64), height*(30/64));
+            ctx.drawImage(Card.images[imageName], drawingX+(width*7/64),drawingY+(height*13/64), width*(50/64), height*(30/64));
         }
         else{
-            this.drawFittedText(ctx, "Image Not Loaded", this.x+(width*7/64),this.y+(height*13/64), width*(50/64), height*(30/64), 'black')
+            this.drawFittedText(ctx, "Image Not Loaded", drawingX+(width*7/64),drawingY+(height*13/64), width*(50/64), height*(30/64), 'black')
         }
+        ctx.setTransform(1,0,0,1,0,0);
     }
 
     private drawFittedText(
@@ -138,7 +146,7 @@ export class Card{
     checkMouseIn(x:number, y:number){
         const width = this.width*this.scale;
         const height = this.height * this.scale;
-        return x>this.x&&x<(this.x+width)&&y>this.y&&y<(this.y+height);
+        return x>(this.x-width/2)&&x<(this.x+width/2)&&y>(this.y-height/2)&&y<(this.y+height/2);
     }
     updateMouseOver(x:number, y:number){
         if(this.checkMouseIn(x,y))

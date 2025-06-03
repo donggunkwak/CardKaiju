@@ -18,15 +18,18 @@ export function Home({username, onLogout}:HomeProps) {
     })
     const lastJsonMessage = connection.lastJsonMessage;
 
-    if(lastJsonMessage){
-        if(lastJsonMessage.room&&lastJsonMessage.room!=currentRoom){
-            const room = connection.lastJsonMessage.room;
-            updateCurrentRoom(room);
+    useEffect(()=>{
+        if(lastJsonMessage){
+            if(lastJsonMessage.room&&lastJsonMessage.room!=currentRoom){
+                const room = connection.lastJsonMessage.room;
+                updateCurrentRoom(room);
+            }
+            else if(lastJsonMessage.type=="error"){
+                window.alert(lastJsonMessage.message);
+                
+            }
         }
-        if(lastJsonMessage.type=="error"){
-            window.alert(lastJsonMessage.message);
-        }
-    }
+    },[lastJsonMessage])
     if(currentRoom==""){
         return (
         <div>

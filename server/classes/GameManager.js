@@ -38,7 +38,9 @@ class GameManager{
     joinRoom(uuid, code){
         if(!Object.keys(this.players).includes(uuid))
             throw Error(`Player with uid ${uuid} not found!`);
-        
+        if(code!=null&&code.length!=CODELENGTH){
+            throw Error("Code needs to be length of 6!");
+        }
         var room = this.rooms[code];
         if(code==null||!Object.keys(this.rooms).includes(code))//create room if it doesn't exist
             room = this.createRoom(code);
