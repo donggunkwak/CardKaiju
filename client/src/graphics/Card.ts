@@ -1,4 +1,6 @@
 export class Card{
+    originalX:number;
+    originalY:number;
     x:number;//center X
     y:number;// center Y
     width:number;
@@ -9,6 +11,7 @@ export class Card{
     specialEffect:string;
     scale:number = 1;
     rotatedAngle: number;
+    originalAngle:number;
 
     private static images: { CardTemplate: HTMLImageElement | null,
         KingKJuul: HTMLImageElement | null,
@@ -19,6 +22,8 @@ export class Card{
     private static loaded:boolean = false;
 
     constructor(x:number, y:number,widthSize:number, name:string, type:string, value:number, specialEffect:string, angle:number) {
+        this.originalX=x;
+        this.originalY=y;
         this.x = x;
         this.y = y;
         this.width=widthSize;
@@ -28,6 +33,7 @@ export class Card{
         this.value = value;
         this.specialEffect = specialEffect;
         this.rotatedAngle = angle;
+        this.originalAngle = angle;
 
     }
     typeToText(){
@@ -138,32 +144,60 @@ export class Card{
 
 
     onHover(){
-        this.scale=1.5;
+        if(this.scale==1){
+            this.scale=1.3;
+            this.y = window.innerHeight-(this.height*this.scale)/2
+            this.rotatedAngle = 0;
+        }
+        
     }
     onHoverOut(){
         this.scale=1;
+        this.x=this.originalX;
+        this.y=this.originalY;
+        this.rotatedAngle = this.originalAngle;
     }
     checkMouseIn(x:number, y:number){
         const width = this.width*this.scale;
         const height = this.height * this.scale;
-        return x>(this.x-width/2)&&x<(this.x+width/2)&&y>(this.y-height/2)&&y<(this.y+height/2);
+
+        const relativeX = x - this.x;
+        const relativeY = y - this.y;
+
+        const angleRad = -this.rotatedAngle * Math.PI / 180;
+        const cos = Math.cos(angleRad);
+        const sin = Math.sin(angleRad);
+
+        const localX = relativeX * cos - relativeY * sin;
+        const localY = relativeX * sin + relativeY * cos;
+
+        return localX > -width/2 && localX < width/2 && localY > -height/2 && localY < height/2;
     }
     updateMouseOver(x:number, y:number){
-        if(this.checkMouseIn(x,y))
+        if(this.checkMouseIn(x,y)){
             this.onHover();
-        else
+            return true;
+        }
+        else{
             this.onHoverOut();
+            return false;
+        }
+            
     }
     resize(previousWindowSize:{width:number, height:number}, newWindowSize:{width:number, height:number}){
         console.log(previousWindowSize, newWindowSize);
         const newX = this.x/previousWindowSize.width*newWindowSize.width;
         const newY = this.y/previousWindowSize.height*newWindowSize.height;
+        const newOriginalX = this.originalX/previousWindowSize.width*newWindowSize.width;
+        const newOriginalY = this.originalY/previousWindowSize.height*newWindowSize.height;
         const newWidth = this.width/previousWindowSize.width*newWindowSize.width;
         const newHeight = newWidth*4/3;
         this.x = newX;
         this.y = newY;
         this.width = newWidth;
         this.height = newHeight;
+        this.originalX = newOriginalX;
+        this.originalY = newOriginalY;
     }
     
 }

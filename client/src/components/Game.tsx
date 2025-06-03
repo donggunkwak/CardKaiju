@@ -34,7 +34,7 @@ export default function Game({username1, username2, gamestate}: GameProps){
 
         let previousWindowSize = { width: window.innerWidth, height: window.innerHeight };
 
-        const hand = new Hand(window.innerWidth/2, window.innerHeight*7/10, window.innerWidth*3/4, gamestate.hand);
+        const hand = new Hand(window.innerWidth/2, window.innerHeight*0.9, window.innerWidth*3/4, gamestate.hand);
         // const tempCard:Card = new Card(
         //     window.innerWidth/2,
         //     window.innerHeight/2,
