@@ -35,9 +35,6 @@ class GameState{
         this.currentEffect = "";
         this.turn = 1;
         this.lastPlays = [null,null];
-        console.log(this.hands[0]);
-        console.log("=================");
-        console.log(this.hands[1]);
     }
     playerChooseCard(playerNum, handIndex){//1 or 2, 1-5
         if(playerNum<1||playerNum>2||handIndex<1||handIndex>5)

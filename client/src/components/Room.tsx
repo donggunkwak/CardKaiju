@@ -7,10 +7,11 @@ type RoomProps = {
     username: string,
     roomCode: string,
     connection: WebSocketHook<any>,
+    onExit: ()=>void,
 }
 
 
-export default function Room({username, roomCode, connection}:RoomProps) {
+export default function Room({username, roomCode, connection, onExit}:RoomProps) {
     const [username1, updateUsername1] = useState(username);
     const [username2, updateUsername2] = useState("");
 
@@ -23,7 +24,7 @@ export default function Room({username, roomCode, connection}:RoomProps) {
     });
 
     const [playerNum, updatePlayerNum] = useState(0);
-
+    
     const lastJsonMessage = connection.lastJsonMessage;
     if(lastJsonMessage){
         if(lastJsonMessage.turn&&lastJsonMessage.turn>gamestate.turn){
@@ -97,7 +98,7 @@ export default function Room({username, roomCode, connection}:RoomProps) {
         <button key={index} onClick={()=>makeMove(index+1)}>{card.name} {card.type} {card.value} {card.specialEffect}</button>
     ))}</>}
 
-    return <Game username1={username1} username2={username2} roomCode={roomCode} gamestate={gamestate}></Game>;
+    return <Game username1={username1} username2={username2} roomCode={roomCode} gamestate={gamestate} onExit={onExit}></Game>;
 
     // return (
     //     <>

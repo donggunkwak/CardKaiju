@@ -30,6 +30,14 @@ export function Home({username, onLogout}:HomeProps) {
             }
         }
     },[lastJsonMessage])
+
+    const exitRoom = ()=>{
+        connection.sendJsonMessage({type:'leaveRoom'});
+        updateCurrentRoom("");
+        changeRoomText("");
+    }
+
+
     if(currentRoom==""){
         return (
         <div>
@@ -50,6 +58,6 @@ export function Home({username, onLogout}:HomeProps) {
         )
     }
     else{
-        return <Room username={username} roomCode={currentRoom}  connection={connection}/>;
+        return <Room username={username} roomCode={currentRoom}  connection={connection} onExit={exitRoom}/>;
     }
 }

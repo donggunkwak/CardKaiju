@@ -130,7 +130,11 @@ class GameManager{
                     playerConnection.send(JSON.stringify({ type: 'error', message: e.toString() }));
                 }
         }
-        // this.printRoomsAndPlayers();
+        for(const roomCode in this.rooms){
+            const p1Username = this.rooms[roomCode].p1?this.rooms[roomCode].p1.username:null;
+            const p2Username = this.rooms[roomCode].p2?this.rooms[roomCode].p2.username:null;
+            console.log(roomCode, p1Username,p2Username);
+        }
     }
 
     generate_unique_code(){

@@ -1,6 +1,7 @@
 export const imageNames = [
-  'CardTemplate.png',
-  'KingKJuul.png', 
+    'CardTemplate.png',
+    'exit.png',
+    'KingKJuul.png', 
 ];
 
 export class ImageHandler{
