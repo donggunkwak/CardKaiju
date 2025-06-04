@@ -1,3 +1,4 @@
+import { ImageHandler } from "./ImageHandler";
 export class Card{
     originalX:number;
     originalY:number;
@@ -13,14 +14,6 @@ export class Card{
     rotatedAngle: number;
     originalAngle:number;
     clicked:boolean = false;
-
-    private static images: { CardTemplate: HTMLImageElement | null,
-        KingKJuul: HTMLImageElement | null,
-     } = {
-        CardTemplate:null,
-        KingKJuul:null
-    }
-    private static loaded:boolean = false;
 
     constructor(x:number, y:number,widthSize:number, name:string, type:string, value:number, specialEffect:string, angle:number) {
         this.originalX=x;
@@ -51,20 +44,9 @@ export class Card{
            return "\u03B7";
         }
     }
-    static loadImages(){
-        const imageKeys = Object.keys(Card.images) as (keyof typeof Card.images)[];
-    
-        for(const image of imageKeys){
-            Card.images[image] = new Image();
-            Card.images[image].src = `/images/${image}.png`
-        }
-
-        console.log("loaded images!");
-        Card.loaded = true;
-    }
 
     draw(ctx:CanvasRenderingContext2D){
-        if(!Card.loaded){
+        if(!ImageHandler.loaded){
             console.log("Images not loaded yet");
             return;
         }    
@@ -76,8 +58,10 @@ export class Card{
         const height = this.height * this.scale;
         const drawingX = -width/2;
         const drawingY = -height/2;
-        if(Card.images.CardTemplate)
-            ctx.drawImage(Card.images.CardTemplate, drawingX,drawingY, width, height);
+
+        const cardTemplateIMG = ImageHandler.images.get('CardTemplate');
+        if(cardTemplateIMG!==undefined)
+            ctx.drawImage(cardTemplateIMG, drawingX,drawingY, width, height);
         //draw at around 1/8 from left of card, 5/64 from top, 4/9 of the width, and 7/64 (pixels) of the height
         //very poor code lol but just need to set dimensions and stuff
         this.drawFittedText(ctx, this.name, drawingX + (width * 4 / 32), drawingY + (height * 5 / 64), width*4/9, height*(7/64), 'black');
@@ -97,9 +81,10 @@ export class Card{
         this.drawFittedText(ctx, this.specialEffect,  drawingX + (width * 4 / 32), drawingY + (height * 45 / 64), width*48/64, height*(12/64), 'black')
         
         
-        const imageName = this.name.replaceAll(" ","").replaceAll(".","") as keyof typeof Card.images;
-        if(Card.images[imageName]){
-            ctx.drawImage(Card.images[imageName], drawingX+(width*7/64),drawingY+(height*13/64), width*(50/64), height*(30/64));
+        const imageName = this.name.replaceAll(" ","").replaceAll(".","");
+        const cardIMG = ImageHandler.images.get(imageName);
+        if(cardIMG){
+            ctx.drawImage(cardIMG, drawingX+(width*7/64),drawingY+(height*13/64), width*(50/64), height*(30/64));
         }
         else{
             this.drawFittedText(ctx, "Image Not Loaded", drawingX+(width*7/64),drawingY+(height*13/64), width*(50/64), height*(30/64), 'black')
