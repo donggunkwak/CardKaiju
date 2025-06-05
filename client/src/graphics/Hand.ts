@@ -19,7 +19,7 @@ export class Hand{
             let handRatio = 0.5;
             if(handObjects.length>1)
                 handRatio = index/(handObjects.length-1);
-            const cardWidth = this.width/handObjects.length;       
+            const cardWidth = this.width/5;       
             const cardX = this.x+(handRatio-0.5)*(this.width/2);//linearly for horizontal
             const cardY = this.y+(Math.pow(handRatio-0.5,2))*(cardWidth);// parabola down for card change
             const angle = (-2*handRatio+1)*(-15);

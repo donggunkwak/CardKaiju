@@ -64,7 +64,7 @@ export default function Game({username1, username2, roomCode, gamestate, playerN
             else if(winner==2)
                 winGraphic.draw(ctx,username2);
                 
-
+            setTimeout(()=>{}, 10);
             requestAnimationFrame(animate);
         }
         requestAnimationFrame(animate);
