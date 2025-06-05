@@ -10,6 +10,9 @@ function shuffle(array) {
 
 class GameState{
     constructor(){
+        this.init();
+    }
+    init(){
         this.decks = [[],[]];//Cards
         const lines = fs.readFileSync('cards.txt', 'utf-8').split('\n').filter(Boolean);
         lines.forEach((line) => {
@@ -36,6 +39,7 @@ class GameState{
         this.turn = 1;
         this.lastPlays = [null,null];
     }
+
     playerChooseCard(playerNum, handIndex){//1 or 2, 1-5
         if(playerNum<1||playerNum>2||handIndex<1||handIndex>5)
             throw Error("The values for playerNum or handIndex are out of bounds! (1-2) and (1-5)")
@@ -54,7 +58,7 @@ class GameState{
         if(this.lastPlays[0]!=null&&this.lastPlays[1]!=null)//both players have made a choice for the card
         {
             const winner = this.makeTurn();
-            return {status:"complete", winner:winner, ...this.getState()};
+            return {status:"complete", roundWinner:winner, ...this.getState()};
         }
         else
             return {status:"waiting", ...this.getState()};

@@ -6,6 +6,7 @@ export class Hand{
     width:number;
     cards:Card[];
     hovered:number;
+    clicked:boolean = false;
     constructor(x:number, y:number, width:number, handObjects:any[]){
         this.x=x;
         this.y=y;
@@ -24,7 +25,6 @@ export class Hand{
             const angle = (-2*handRatio+1)*(-15);
             this.cards.push(new Card(cardX,cardY,cardWidth, card.name, card.type, card.value, card.specialEffect, angle));
         });
-        console.log(this.cards);
     }
     draw(ctx:CanvasRenderingContext2D){
 
@@ -42,12 +42,13 @@ export class Hand{
         this.updateMouseOver(x,y);
         if(this.hovered==-1)
             return;
-        console.log("hand clicked");
         this.cards[this.hovered].onClick();
+        this.clicked=true;
     }
     onRelease(){
         for(const card of this.cards)
             card.unClick();
+        this.clicked=false;
         this.hovered=-1;
     }
     updateMouseOver(x:number, y:number){

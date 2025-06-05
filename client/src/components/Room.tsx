@@ -14,6 +14,7 @@ type RoomProps = {
 export default function Room({username, roomCode, connection, onExit}:RoomProps) {
     const [username1, updateUsername1] = useState(username);
     const [username2, updateUsername2] = useState("");
+    const [winner, updateWinner] = useState(0);
 
     const [gamestate, updateGamestate] = useState({
         turn: 0,
@@ -27,7 +28,7 @@ export default function Room({username, roomCode, connection, onExit}:RoomProps)
     
     const lastJsonMessage = connection.lastJsonMessage;
     if(lastJsonMessage){
-        if(lastJsonMessage.turn&&lastJsonMessage.turn>gamestate.turn){
+        if(lastJsonMessage.turn&&lastJsonMessage.turn!=gamestate.turn){
             const newTurn = lastJsonMessage.turn;
             const newEffect = lastJsonMessage.currentEffect;
             const newPoints = lastJsonMessage.points;
@@ -77,6 +78,9 @@ export default function Room({username, roomCode, connection, onExit}:RoomProps)
         if(lastJsonMessage.username2!=undefined&&lastJsonMessage.username2!=username2){
             updateUsername2(lastJsonMessage.username2);
         }
+        if(lastJsonMessage.winner!=undefined&&lastJsonMessage.winner!=winner){
+            updateWinner(lastJsonMessage.winner);
+        }
     }
 
     const makeMove = (handIndex:number)=>{
@@ -85,20 +89,22 @@ export default function Room({username, roomCode, connection, onExit}:RoomProps)
         connection.sendJsonMessage({type:'makeMove', handIndex:handIndex});
     }
 
-    const stateHTML =()=>{ 
-        return (<>
-        {(!username1||!username2) && <h1>Opponent Not in Game!</h1>}
-        <h3>Turn {gamestate.turn}</h3>
-        <p>Points for {username1}: {gamestate.points[0][0]} {gamestate.points[0][1]} {gamestate.points[0][2]}</p>
-        <p>Points for {username2}: {gamestate.points[1][0]} {gamestate.points[1][1]} {gamestate.points[1][2]}</p>
-        <p>Current Effect: {gamestate.currentEffect}</p>
-    </>);}
+    // const stateHTML =()=>{ 
+    //     return (<>
+    //     {(!username1||!username2) && <h1>Opponent Not in Game!</h1>}
+    //     <h3>Turn {gamestate.turn}</h3>
+    //     <p>Points for {username1}: {gamestate.points[0][0]} {gamestate.points[0][1]} {gamestate.points[0][2]}</p>
+    //     <p>Points for {username2}: {gamestate.points[1][0]} {gamestate.points[1][1]} {gamestate.points[1][2]}</p>
+    //     <p>Current Effect: {gamestate.currentEffect}</p>
+    // </>);}
 
-    const handHTML = ()=>{return <>{gamestate.hand.map((card:any,index)=>(
-        <button key={index} onClick={()=>makeMove(index+1)}>{card.name} {card.type} {card.value} {card.specialEffect}</button>
-    ))}</>}
+    // const handHTML = ()=>{return <>{gamestate.hand.map((card:any,index)=>(
+    //     <button key={index} onClick={()=>makeMove(index+1)}>{card.name} {card.type} {card.value} {card.specialEffect}</button>
+    // ))}</>}
 
-    return <Game username1={username1} username2={username2} roomCode={roomCode} gamestate={gamestate} onExit={onExit}></Game>;
+    return <Game username1={username1} username2={username2} roomCode={roomCode} gamestate={gamestate} playerNum={playerNum}
+    winner={winner}
+    onExit={onExit} onMove={makeMove}></Game>;
 
     // return (
     //     <>

@@ -9,9 +9,15 @@ class Room{
     makeMove(playerID, handIndex){//1-2, 1-5
         if(this.p1==null||this.p2==null)
             throw Error("Cannot make move while room is not full!");
+        if(this.gameState.getWinner())
+            throw Error("Can't make a move when a player has won!");
+
         const playerNum = this.getPlayerNum(playerID);
         let response = this.gameState.playerChooseCard(playerNum,handIndex);
 
+        if(this.gameState.getWinner()){
+            response.winner = this.gameState.getWinner();
+        }
 
         const p1 = this.p1==null?"":this.p1.username;
         const p2 = this.p2==null?"":this.p2.username;

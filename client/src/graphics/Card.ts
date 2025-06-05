@@ -183,7 +183,6 @@ export class Card{
             
     }
     resize(previousWindowSize:{width:number, height:number}, newWindowSize:{width:number, height:number}){
-        console.log(previousWindowSize, newWindowSize);
         const newX = this.x/previousWindowSize.width*newWindowSize.width;
         const newY = this.y/previousWindowSize.height*newWindowSize.height;
         const newOriginalX = this.originalX/previousWindowSize.width*newWindowSize.width;
