@@ -33,6 +33,7 @@ export default function Room({username, roomCode, connection, onExit}:RoomProps)
             const newEffect = lastJsonMessage.currentEffect;
             const newPoints = lastJsonMessage.points;
             const newLastPlays = lastJsonMessage.lastPlays;
+            console.log(newLastPlays);
 
             const newState = {
                 turn: newTurn,
@@ -59,7 +60,7 @@ export default function Room({username, roomCode, connection, onExit}:RoomProps)
                 points: gamestate.points,
                 hand: lastJsonMessage.hand1,
                 currentEffect: gamestate.currentEffect,
-                lastPlays: gamestate.lastPlays,
+                lastPlays: lastJsonMessage.lastPlays,
             });
         }
         else if(lastJsonMessage.hand2&&lastJsonMessage.hand2.length!=gamestate.hand.length){
@@ -68,7 +69,7 @@ export default function Room({username, roomCode, connection, onExit}:RoomProps)
                 points: gamestate.points,
                 hand: lastJsonMessage.hand2,
                 currentEffect: gamestate.currentEffect,
-                lastPlays: gamestate.lastPlays,
+                lastPlays: lastJsonMessage.lastPlays,
             });
         }
 

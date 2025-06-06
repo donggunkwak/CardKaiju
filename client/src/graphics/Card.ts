@@ -57,12 +57,7 @@ export class Card{
         if(flipProgress>=0){
             const scaleX = Math.cos(flipProgress * Math.PI);
             const flipScale = Math.abs(scaleX);
-            // If the card is flipped more than 90 degrees, flip it horizontally
-            if(scaleX < 0) {
-                ctx.scale(-flipScale, 1);
-            } else {
-                ctx.scale(flipScale, 1);
-            }
+            ctx.scale(flipScale,1);
         }
         
 

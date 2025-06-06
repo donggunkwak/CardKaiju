@@ -12,7 +12,7 @@ export class LastPlay{
     animated = false;
 
     animationStartTime: number = 0;
-    animationDuration: number = 1000; // 1 second flip animation
+    animationDuration: number = 2000; // 1 second flip animation
     
     constructor(x:number,y:number,cardDistance:number,cardWidth:number, lastPlays:any[], playerNum:number){
         this.x=x;
@@ -26,7 +26,7 @@ export class LastPlay{
             this.flippedCard = 1;
         this.setCards();
     }
-    draw(ctx:CanvasRenderingContext2D){
+    draw(ctx:CanvasRenderingContext2D){ 
         if(this.cardLeft!=null&&this.cardRight!=null){
             if(!this.animated){
                 this.animated=true;
@@ -34,14 +34,25 @@ export class LastPlay{
             }
             const currentTime = Date.now();
             const elapsed = currentTime - this.animationStartTime;
-            const flipProgress = Math.min(elapsed / this.animationDuration, 1);
-            if(flipProgress >= 1) {
+            const flipProgress = elapsed / this.animationDuration;//wait 
+            if(flipProgress >= 2) {
                 this.animated = false;
                 this.cardLeft=null;
                 this.cardRight=null;
             }
+            else if(flipProgress>=1){
+                this.cardRight.draw(ctx);
+                this.cardLeft.draw(ctx);
+            }
             else{
-
+                if(this.flippedCard==1){
+                    this.cardRight.draw(ctx);
+                    this.cardLeft.draw(ctx,flipProgress);
+                }
+                else{
+                    this.cardLeft.draw(ctx);
+                    this.cardRight.draw(ctx,flipProgress);
+                }
             }
         }
         else if(this.cardLeft!=null){
@@ -53,12 +64,18 @@ export class LastPlay{
     }
     setCards(){
         if(this.lastPlays[0]!=null){
-            this.cardLeft = new Card(this.x-this.cardWidth/2,this.y,this.cardWidth,
+            this.cardLeft = new Card(this.x-this.cardWidth,this.y,this.cardWidth,
                 this.lastPlays[0].name,this.lastPlays[0].type,this.lastPlays[0].value,this.lastPlays[0].specialEffect,0);
         }
+        else{
+            this.cardLeft=null;
+        }
         if(this.lastPlays[1]!=null){
-            this.cardLeft = new Card(this.x+this.cardWidth/2,this.y,this.cardWidth,
+            this.cardRight = new Card(this.x+this.cardWidth,this.y,this.cardWidth,
                 this.lastPlays[1].name,this.lastPlays[1].type,this.lastPlays[1].value,this.lastPlays[1].specialEffect,0);
+        }
+        else{
+            this.cardRight=null;
         }
     }
     resize(previousWindowSize:{width:number, height:number}, newWindowSize:{width:number, height:number}){
