@@ -15,7 +15,6 @@ class Room{
         const playerNum = this.getPlayerNum(playerID);
         let response = this.gameState.playerChooseCard(playerNum,handIndex);
         response.winner = this.gameState.getWinner();
-        console.log(response.lastPlays);
 
         const p1 = this.p1==null?"":this.p1.username;
         const p2 = this.p2==null?"":this.p2.username;

@@ -12,6 +12,7 @@ type GameState = {
   hand: any[];
   currentEffect: string;
   lastPlays: (any | null)[];
+  roundWinner:number;
 };
 
 type GameProps = {
@@ -54,7 +55,8 @@ export default function Game({username1, username2, roomCode, gamestate, playerN
         const winGraphic = new WinGraphic(window.innerWidth/2,window.innerHeight*0.4,window.innerWidth*0.4, window.innerHeight*0.2);
 
         console.log(gamestate.lastPlays);
-        const lastPlay = new LastPlay(window.innerWidth/2,window.innerHeight*0.4,window.innerWidth*3/4,window.innerWidth*0.15,gamestate.lastPlays,playerNum);
+        const lastPlay = new LastPlay(window.innerWidth/2,window.innerHeight*0.4,window.innerWidth*0.35,window.innerWidth*0.15,
+            gamestate.lastPlays,playerNum, gamestate.roundWinner);
 
         header.draw(ctx);
         

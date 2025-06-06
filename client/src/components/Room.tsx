@@ -22,6 +22,7 @@ export default function Room({username, roomCode, connection, onExit}:RoomProps)
         hand: [],
         currentEffect: "",
         lastPlays: [null,null],
+        roundWinner: 0,
     });
 
     const [playerNum, updatePlayerNum] = useState(0);
@@ -33,7 +34,7 @@ export default function Room({username, roomCode, connection, onExit}:RoomProps)
             const newEffect = lastJsonMessage.currentEffect;
             const newPoints = lastJsonMessage.points;
             const newLastPlays = lastJsonMessage.lastPlays;
-            console.log(newLastPlays);
+            const newRoundWinner = lastJsonMessage.roundWinner;
 
             const newState = {
                 turn: newTurn,
@@ -41,6 +42,7 @@ export default function Room({username, roomCode, connection, onExit}:RoomProps)
                 hand: [],
                 currentEffect: newEffect,
                 lastPlays: newLastPlays,
+                roundWinner:newRoundWinner?newRoundWinner:0
             }
 
             if(lastJsonMessage.hand1){
@@ -61,6 +63,7 @@ export default function Room({username, roomCode, connection, onExit}:RoomProps)
                 hand: lastJsonMessage.hand1,
                 currentEffect: gamestate.currentEffect,
                 lastPlays: lastJsonMessage.lastPlays,
+                roundWinner:gamestate.roundWinner,
             });
         }
         else if(lastJsonMessage.hand2&&lastJsonMessage.hand2.length!=gamestate.hand.length){
@@ -70,6 +73,7 @@ export default function Room({username, roomCode, connection, onExit}:RoomProps)
                 hand: lastJsonMessage.hand2,
                 currentEffect: gamestate.currentEffect,
                 lastPlays: lastJsonMessage.lastPlays,
+                roundWinner:gamestate.roundWinner,
             });
         }
 
