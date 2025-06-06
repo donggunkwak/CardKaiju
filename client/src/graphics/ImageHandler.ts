@@ -1,4 +1,5 @@
 export const imageNames = [
+    'CardBack.png',
     'CardTemplate.png',
     'exit.png',
     'KingKJuul.png', 

@@ -5,6 +5,7 @@ import { ImageHandler } from "../graphics/ImageHandler";
 import { Exit } from "../graphics/Exit";
 import { CardDrop } from "../graphics/CardDrop";
 import { WinGraphic } from "../graphics/WinGraphic";
+import { LastPlay } from "../graphics/LastPlay";
 type GameState = {
   turn: number;
   points: number[][];
@@ -21,11 +22,12 @@ type GameProps = {
     playerNum:number,
     winner:number,
     onExit: ()=>void,
-    onMove: (index:number)=>void
+    onMove: (index:number)=>void,
+    onRestart: ()=>void,
 }   
 
 
-export default function Game({username1, username2, roomCode, gamestate, playerNum, winner, onExit, onMove}: GameProps){
+export default function Game({username1, username2, roomCode, gamestate, playerNum, winner, onExit, onMove, onRestart}: GameProps){
     const canvasRef =  useRef<HTMLCanvasElement>(null);
     
     useEffect(()=>{
@@ -45,10 +47,16 @@ export default function Game({username1, username2, roomCode, gamestate, playerN
         let previousWindowSize = { width: window.innerWidth, height: window.innerHeight };
 
         const hand = new Hand(window.innerWidth/2, window.innerHeight*0.9, window.innerWidth*3/4, gamestate.hand);
-        const header = new Header(username1,username2,roomCode,gamestate.points);
+
+
+        const header = playerNum==1||playerNum==0?new Header(username1+"(You)",username2,roomCode,gamestate.points):new Header(username1,username2+"(You)",roomCode,gamestate.points);
         const exit = new Exit(window.innerWidth*0.95, 0,Math.min(window.innerHeight*0.1,window.innerWidth*0.05))
         const cardDrop = new CardDrop(window.innerWidth/2,window.innerHeight*0.35,window.innerWidth*0.3, window.innerHeight*0.3);
-        const winGraphic = new WinGraphic(window.innerWidth/2,window.innerHeight*0.4,window.innerWidth*0.4, window.innerHeight*0.2)
+        const winGraphic = new WinGraphic(window.innerWidth/2,window.innerHeight*0.4,window.innerWidth*0.4, window.innerHeight*0.2);
+
+        console.log(gamestate.lastPlays);
+        const lastPlay = new LastPlay(window.innerWidth/2,window.innerHeight*0.4,window.innerWidth/2,window.innerWidth*3/10,gamestate.lastPlays,playerNum);
+
         header.draw(ctx);
         
         const animate = ()=>{
@@ -63,7 +71,8 @@ export default function Game({username1, username2, roomCode, gamestate, playerN
                 winGraphic.draw(ctx,username1);
             else if(winner==2)
                 winGraphic.draw(ctx,username2);
-                
+            
+            lastPlay.draw(ctx);
             setTimeout(()=>{}, 10);
             requestAnimationFrame(animate);
         }
@@ -76,6 +85,7 @@ export default function Game({username1, username2, roomCode, gamestate, playerN
             exit.resize(previousWindowSize,newWindowSize);
             cardDrop.resize(previousWindowSize,newWindowSize);
             winGraphic.resize(previousWindowSize,newWindowSize);
+            lastPlay.resize(previousWindowSize,newWindowSize);
             resizeCanvas();
 
             previousWindowSize = newWindowSize;
@@ -93,6 +103,9 @@ export default function Game({username1, username2, roomCode, gamestate, playerN
             hand.onClick(x,y);
             if(exit.mouseIn(x,y)){
                 onExit();
+            }
+            if(winner&&winGraphic.mouseIn(x,y)){
+                onRestart();
             }
         }
 

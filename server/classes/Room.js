@@ -14,10 +14,7 @@ class Room{
 
         const playerNum = this.getPlayerNum(playerID);
         let response = this.gameState.playerChooseCard(playerNum,handIndex);
-
-        if(this.gameState.getWinner()){
-            response.winner = this.gameState.getWinner();
-        }
+        response.winner = this.gameState.getWinner();
 
         const p1 = this.p1==null?"":this.p1.username;
         const p2 = this.p2==null?"":this.p2.username;
@@ -35,6 +32,7 @@ class Room{
         const p1 = this.p1==null?"":this.p1.username;
         const p2 = this.p2==null?"":this.p2.username;
         const response = {username1:p1, username2:p2, ...this.gameState.getState()};
+        response.winner = this.gameState.getWinner();
         const playerNum = this.getPlayerNum(playerID);
         if(playerNum==1){
             const {hand2, ...responseForP1} = response;
@@ -74,6 +72,9 @@ class Room{
         else{
             throw Error('Player not found!');
         }
+    }
+    restart(){
+        this.gameState = new GameState();
     }
     
     hasSpace(){

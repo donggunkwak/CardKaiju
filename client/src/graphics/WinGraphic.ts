@@ -14,8 +14,15 @@ export class WinGraphic{
         ctx.beginPath();
         ctx.roundRect(this.x-this.width/2,this.y-this.height/2,this.width,this.height,[10,10,10,10]);
         ctx.fill();
-        this.drawFittedText(ctx,`${winner} has won!`,this.x-this.width/2,this.y-this.height/2,this.width,this.height,'white');
-
+        this.drawFittedText(ctx,`${winner} has won!`,this.x-this.width/2,this.y-this.height/2,this.width,this.height/2,'white');
+        //restart button (half the width and half the height)
+        const startingX = this.x-this.width/4
+        const startingY = this.y
+        ctx.fillStyle='#413bbf';
+        ctx.beginPath();
+        ctx.roundRect(startingX,startingY,this.width/2,this.height/2,[10,10,10,10]);
+        ctx.fill();
+        this.drawFittedText(ctx,`Restart`,startingX,startingY,this.width/2,this.height/2,'white');
     }
     resize(previousWindowSize:{width:number, height:number}, newWindowSize:{width:number, height:number}){
         const newX = this.x/previousWindowSize.width*newWindowSize.width;
@@ -28,7 +35,8 @@ export class WinGraphic{
         this.height = newHeight;
     }
     mouseIn(x:number, y:number){
-        return x>(this.x-this.width/2) && x<(this.x+this.width/2)&&y>(this.y-this.height/2)&&y<(this.y+this.height/2);
+        //only for mouse in button (half the size of the box starting at the bottom half)
+        return x>(this.x-this.width/4) && x<(this.x+this.width/4)&&y>(this.y)&&y<(this.y+this.height/2);
     }
 
     private drawFittedText(

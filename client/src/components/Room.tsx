@@ -89,6 +89,10 @@ export default function Room({username, roomCode, connection, onExit}:RoomProps)
         connection.sendJsonMessage({type:'makeMove', handIndex:handIndex});
     }
 
+    const restart = ()=>{
+        connection.sendJsonMessage({type:'restart'});
+    }
+
     // const stateHTML =()=>{ 
     //     return (<>
     //     {(!username1||!username2) && <h1>Opponent Not in Game!</h1>}
@@ -104,7 +108,7 @@ export default function Room({username, roomCode, connection, onExit}:RoomProps)
 
     return <Game username1={username1} username2={username2} roomCode={roomCode} gamestate={gamestate} playerNum={playerNum}
     winner={winner}
-    onExit={onExit} onMove={makeMove}></Game>;
+    onExit={onExit} onMove={makeMove} onRestart={restart}></Game>;
 
     // return (
     //     <>

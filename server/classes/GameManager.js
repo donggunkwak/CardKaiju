@@ -130,6 +130,22 @@ class GameManager{
                     console.log(e);
                     playerConnection.send(JSON.stringify({ type: 'error', message: e.toString() }));
                 }
+                break;
+            case 'restart':
+                try{
+                    const roomCode = player.roomCode;
+                    const room = this.rooms[roomCode];
+                    room.restart();
+                    if(!room.hasSpace()){//in case room is filled, send the gamestate
+                        room.p1.send(JSON.stringify(room.getRoom(room.p1.uuid)));
+                        room.p2.send(JSON.stringify(room.getRoom(room.p2.uuid)));
+                    }
+                }
+                catch(e){
+                    console.log(e);
+                    playerConnection.send(JSON.stringify({ type: 'error', message: e.toString() }));
+                }
+                break;
         }
         for(const roomCode in this.rooms){
             const p1Username = this.rooms[roomCode].p1?this.rooms[roomCode].p1.username:null;

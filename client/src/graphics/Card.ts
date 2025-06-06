@@ -45,19 +45,38 @@ export class Card{
         }
     }
 
-    draw(ctx:CanvasRenderingContext2D){
+    draw(ctx:CanvasRenderingContext2D, flipProgress:number=-1){
         if(!ImageHandler.loaded){
             console.log("Images not loaded yet");
             return;
-        }    
+        }  
+
         ctx.translate(this.x, this.y);
         ctx.rotate(this.rotatedAngle*Math.PI/180);
+
+        if(flipProgress>=0){
+            const scaleX = Math.cos(flipProgress * Math.PI);
+            const flipScale = Math.abs(scaleX);
+            // If the card is flipped more than 90 degrees, flip it horizontally
+            if(scaleX < 0) {
+                ctx.scale(-flipScale, 1);
+            } else {
+                ctx.scale(flipScale, 1);
+            }
+        }
         
 
         const width = this.width*this.scale;
         const height = this.height * this.scale;
         const drawingX = -width/2;
         const drawingY = -height/2;
+
+        if(flipProgress>=0&&flipProgress<0.5){
+            const cardBackIMG = ImageHandler.images.get('CardBack');
+            if(cardBackIMG!==undefined)
+                ctx.drawImage(cardBackIMG, drawingX,drawingY, width, height);
+            return;
+        }
 
         const cardTemplateIMG = ImageHandler.images.get('CardTemplate');
         if(cardTemplateIMG!==undefined)
